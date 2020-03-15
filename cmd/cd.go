@@ -13,8 +13,8 @@ func init() {
 
 var cdCmd = &cobra.Command{
 	Use:   "cd",
-	Short: "Navigate atraves holaluz repositories",
-	Long:  `Navigate atraves holaluz repositories...`,
+	Short: "Navigate through holaluz repositories",
+	Long:  `Navigate through holaluz repositories in github`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Print(viper.GetString("code_path") + "/" + args[0])
 	},

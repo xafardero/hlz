@@ -20,19 +20,11 @@ func init() {
 var cloneCmd = &cobra.Command{
 	Use:   "clone",
 	Short: "Clone holaluz repositories",
-	Long:  `Clone all holaluz repositories you want`,
+	Long:  `Clone holaluz repositories from github`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Sprintf("git@github.com:holaluz/%s.git", args[0])
-		clone(args[0], "git@github.com:holaluz/"+args[0]+".git")
+		url := fmt.Sprintf("git@github.com:holaluz/%s.git", args[0])
+		clone(args[0], url)
 	},
-}
-
-func getSSHKeyAuth(privateSSHKeyFile string) transport.AuthMethod {
-	var auth transport.AuthMethod
-	sshKey, _ := ioutil.ReadFile(privateSSHKeyFile)
-	signer, _ := ssh.ParsePrivateKey([]byte(sshKey))
-	auth = &go_git_ssh.PublicKeys{User: "git", Signer: signer}
-	return auth
 }
 
 func clone(projectName string, url string) {
@@ -49,4 +41,12 @@ func clone(projectName string, url string) {
 	CheckIfError(err)
 
 	fmt.Println("Cloned")
+}
+
+func getSSHKeyAuth(privateSSHKeyFile string) transport.AuthMethod {
+	var auth transport.AuthMethod
+	sshKey, _ := ioutil.ReadFile(privateSSHKeyFile)
+	signer, _ := ssh.ParsePrivateKey([]byte(sshKey))
+	auth = &go_git_ssh.PublicKeys{User: "git", Signer: signer}
+	return auth
 }
