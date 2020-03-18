@@ -44,7 +44,7 @@ sudo chmod +x /usr/local/bin/hlz
 ### From binary (Mac)
 
 ```bash
-sudo wget -O /usr/local/bin/hlz https://github.com/xafardero/hlz/releases/latest/download/ hlz_darwin
+sudo wget -O /usr/local/bin/hlz https://github.com/xafardero/hlz/releases/latest/download/hlz_darwin
 ```
 ```bash
 sudo chmod +x /usr/local/bin/hlz
