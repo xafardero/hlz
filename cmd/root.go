@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -32,7 +31,6 @@ func init() {
 }
 
 func initConfig() {
-	// Find home directory.
 	home, err := homedir.Dir()
 	if err != nil {
 		fmt.Println("Error finding the home direcory:", err.Error())
@@ -42,17 +40,8 @@ func initConfig() {
 	viper.AddConfigPath(home)   // call multiple times to add many search paths
 
 	err = viper.ReadInConfig() // Find and read the config file
-	if err != nil {            // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s", err))
-	}
-}
 
-// CheckIfError should be used to naively panics if an error is not nil.
-func CheckIfError(err error) {
-	if err == nil {
-		return
+	if err != nil {
+		fmt.Println(fmt.Errorf("Fatal error config file: %s", err))
 	}
-
-	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
-	os.Exit(1)
 }

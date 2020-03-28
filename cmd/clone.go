@@ -38,9 +38,12 @@ func clone(projectName string, url string) {
 		Progress: os.Stdout,
 	})
 
-	CheckIfError(err)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Repository clone fail: %s", err))
+		os.Exit(1)
+	}
 
-	fmt.Println("Cloned")
+	fmt.Println("Cloned %d in directory %s", projectName, directory)
 }
 
 func getSSHKeyAuth(privateSSHKeyFile string) transport.AuthMethod {
