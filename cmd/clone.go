@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/ssh"
@@ -28,19 +29,22 @@ var cloneCmd = &cobra.Command{
 }
 
 func clone(projectName string, url string) {
-	directory := viper.GetString("code_path") + "/" + projectName
+	directory := getProjectsDirectory(projectName)
 
-	fmt.Println(directory)
+	fmt.Printf("\n%s\n\n", directory)
 
 	_, err := git.PlainClone(directory, false, &git.CloneOptions{
 		URL:      url,
-		Auth:     getSSHKeyAuth(viper.GetString("github_key_path")),
+		Auth:     getSSHKeyAuth(getGithubSSHKey()),
 		Progress: os.Stdout,
 	})
 
-	CheckIfError(err)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Repository clone fail because %s", err))
+		os.Exit(1)
+	}
 
-	fmt.Println("Cloned")
+	fmt.Printf("\nCloned %s in directory %s\n", projectName, directory)
 }
 
 func getSSHKeyAuth(privateSSHKeyFile string) transport.AuthMethod {
@@ -49,4 +53,16 @@ func getSSHKeyAuth(privateSSHKeyFile string) transport.AuthMethod {
 	signer, _ := ssh.ParsePrivateKey([]byte(sshKey))
 	auth = &go_git_ssh.PublicKeys{User: "git", Signer: signer}
 	return auth
+}
+
+func getGithubSSHKey() string {
+	configSSHKey := viper.GetString("github_key_path")
+
+	if configSSHKey != "" {
+		return configSSHKey
+	}
+
+	home, _ := homedir.Dir()
+
+	return fmt.Sprintf("%s/.ssh/id_rsa", home)
 }

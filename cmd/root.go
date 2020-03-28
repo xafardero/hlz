@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -32,27 +31,33 @@ func init() {
 }
 
 func initConfig() {
-	// Find home directory.
 	home, err := homedir.Dir()
+
 	if err != nil {
-		fmt.Println("Error finding the home direcory:", err.Error())
+		fmt.Println("Error finding the home directory:", err.Error())
 	}
+
 	viper.SetConfigName("hlz")  // name of config file (without extension)
 	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
 	viper.AddConfigPath(home)   // call multiple times to add many search paths
 
-	err = viper.ReadInConfig() // Find and read the config file
-	if err != nil {            // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s", err))
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			// Config file not found; ignore error
+		} else {
+			fmt.Println(fmt.Errorf("%s using default variables", err))
+		}
 	}
 }
 
-// CheckIfError should be used to naively panics if an error is not nil.
-func CheckIfError(err error) {
-	if err == nil {
-		return
+func getProjectsDirectory(projectName string) string {
+	codePath := viper.GetString("code_path")
+
+	if codePath != "" {
+		return codePath + "/" + projectName
 	}
 
-	fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
-	os.Exit(1)
+	home, _ := homedir.Dir()
+
+	return fmt.Sprintf("%s/Code/%s", home, projectName)
 }

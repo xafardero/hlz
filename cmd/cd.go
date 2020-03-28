@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 func init() {
@@ -16,6 +15,6 @@ var cdCmd = &cobra.Command{
 	Short: "Navigate through holaluz repositories",
 	Long:  `Navigate through holaluz repositories in github`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Print(viper.GetString("code_path") + "/" + args[0])
+		fmt.Print(getProjectsDirectory(args[0]))
 	},
 }
