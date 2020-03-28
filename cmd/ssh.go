@@ -20,7 +20,6 @@ var region string
 var user string
 
 func init() {
-	sshCmd.Flags().StringVarP(&name, "name", "n", "*", "name")
 	sshCmd.Flags().StringVarP(&env, "env", "e", "*", "env")
 	sshCmd.Flags().StringVarP(&app, "app", "a", "*", "app")
 	sshCmd.Flags().StringVarP(&region, "region", "r", "eu-west-1", "region")
@@ -33,12 +32,19 @@ var sshCmd = &cobra.Command{
 	Short: "ssh to your aws instances.",
 	Long:  `select and enter to your aws instances via ssh.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		var ec2 string
+
+		if len(args) != 0 {
+			ec2 = args[0]
+		} else {
+			ec2 = "*"
+		}
 
 		rawInstanceList := filterInstances(
 			cmd.Flag("region").Value.String(),
 			cmd.Flag("env").Value.String(),
 			cmd.Flag("app").Value.String(),
-			cmd.Flag("name").Value.String(),
+			ec2,
 		)
 		instances := getInstancesInfo(rawInstanceList)
 		showInstanceList(instances, cmd.Flag("user").Value.String())

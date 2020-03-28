@@ -25,7 +25,7 @@ hlz cups
 Enter to the aws instances:
 
 ```
-hlz ssh -n core
+hlz ssh core
 ```
 
 ---
