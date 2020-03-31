@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/holaluz/hlz/cmd"
+	"github.com/holaluz/hlz/internal/cmd"
 )
 
 func main() {
