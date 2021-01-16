@@ -15,6 +15,12 @@ var cdCmd = &cobra.Command{
 	Short: "Navigate through holaluz repositories",
 	Long:  `Navigate through holaluz repositories in github`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Print(getProjectsDirectory(args[0]))
+		project := ""
+
+		if len(args) > 0 {
+			project = args[0]
+		}
+
+		fmt.Print(getProjectsDirectory(project))
 	},
 }
