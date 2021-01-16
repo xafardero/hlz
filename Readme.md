@@ -56,7 +56,7 @@ sudo chmod +x /usr/local/bin/hlz
 wget https://github.com/xafardero/hlz/releases/latest/download/hlz.zip
 ```
 ```bash
-go build -o hlz *.go
+go build -o hlz cmd/hlz/main.go
 ```
 
 ```bash
